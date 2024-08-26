@@ -40,7 +40,7 @@ public class ClienteUseCase {
                         rs.getInt("idcliente") +
                         " Nome: " +
                         rs.getString("nome") +
-                        "CPF: " +
+                        " CPF: " +
                         rs.getString("cpf"));
             }
         } catch (SQLException e) {

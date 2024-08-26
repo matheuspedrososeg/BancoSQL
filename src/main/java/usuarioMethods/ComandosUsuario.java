@@ -171,6 +171,10 @@ public class ComandosUsuario {
         }
         System.out.println("Quantos deste produto deseja comprar?");
         int qt = scanner.nextInt();
+        while (qt < 1 || qt > 99) {
+            System.out.println("Quantidade invalida. Tente novamente.");
+            qt = scanner.nextInt();
+        }
 
         ItemPedido itpedido = ItemPedido.builder().idpedido(idpedido).quantidade(qt).idproduto(i).build();
         if (it.criarItemPedido(itpedido, idpedido)) {
