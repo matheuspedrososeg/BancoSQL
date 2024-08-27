@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Pedido {
     protected int idpedido;
-    protected int idcliente;
+    protected int  idcliente;
     protected List<ItemPedido> itensPedido;
     protected float total;
 }

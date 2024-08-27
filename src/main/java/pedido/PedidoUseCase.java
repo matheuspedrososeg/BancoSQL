@@ -52,7 +52,7 @@ public class PedidoUseCase {
     }
     public void mostrarCarrinho(Pedido pedido) {
         for (int i = 0; i < pedido.getItensPedido().size(); i++) {
-            String query = "select p.nome as nome from produto where p.idproduto = " + pedido.getItensPedido().get(i).getIdproduto() + ";";
+            String query = "select p.nome as nome from produto p where p.idproduto = " + pedido.getItensPedido().get(i).getIdproduto() + ";";
             Statement stm;
             try {
                 stm = connection.createStatement();

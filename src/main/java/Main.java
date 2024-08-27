@@ -1,4 +1,8 @@
+import infra.IniciarConexao;
 import usuarioMethods.ComandosUsuario;
+
+import java.sql.Connection;
+
 public class Main {
     public static void main(String[] args) {
         ComandosUsuario cmu = new ComandosUsuario();
@@ -6,6 +10,6 @@ public class Main {
     }
 
     // pegar cliente pelo seu objeto, e nao por ID.
-    // mostrar produtos do pedido usando a lista.
+    // corrigir consulta pedido, por causa de !rs.next() ele nao pega o primeiro pedido feito.
 
 }
