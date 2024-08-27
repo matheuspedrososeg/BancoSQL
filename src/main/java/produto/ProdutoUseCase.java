@@ -9,20 +9,6 @@ import java.sql.Statement;
 
 public class ProdutoUseCase {
     Connection connection = IniciarConexao.startConnection();
-    public void consultarProdutoPorID( int id) {
-        String query = "select nome, valor from produto where idproduto = " + id;
-        Statement stm;
-
-        try {
-            stm = connection.createStatement();
-            ResultSet rs = stm.executeQuery(query);
-            while (rs.next()) {
-                System.out.println("Produto: " + rs.getString("nome") + " \nValor: " + rs.getInt("valor"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
     public void consultarProdutos() {
         Statement stm;
         String query = "select * from produto;";
@@ -63,8 +49,8 @@ public class ProdutoUseCase {
             throw new RuntimeException(e);
         }
     }
-    public int consultarIDItemPorNome(String nome) {
-        String query = "select p.idproduto from produto p where p.nome like '" + nome + "%';";
+    public int consultarIDItem(int id) {
+        String query = "select p.idproduto from produto p where p.idproduto = " + id + ";";
         Statement stm;
         try {
             stm = connection.createStatement();

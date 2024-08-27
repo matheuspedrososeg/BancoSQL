@@ -9,6 +9,9 @@ import pedido.PedidoUseCase;
 import produto.Produto;
 import produto.ProdutoUseCase;
 
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ComandosUsuario {
@@ -18,7 +21,14 @@ public class ComandosUsuario {
         System.out.println("Qual tabela deseja manipular?");
         System.out.println("1 = Produto\n2 = Pedido\n3 = Cliente\n0 = Finalizar programa.");
         int choice = scanner.nextInt();
+        PedidoUseCase pd = new PedidoUseCase();
         while (choice != 0) {
+
+            while (choice > 3 || choice < 0) {
+                System.out.println("Escolha nao disponivel. Tente novamente.");
+                System.out.println("1 = Produto\n2 = Pedido\n3 = Cliente\n0 = Finalizar programa.");
+                choice = scanner.nextInt();
+            }
 
             if (choice == 1) {
                 System.out.println("O que deseja fazer?");
@@ -40,25 +50,32 @@ public class ComandosUsuario {
                 System.out.println("O que deseja fazer?");
                 System.out.println("1 = Criar um pedido.\n2 = Consultar um pedido ");
                 int choice2 = scanner.nextInt();
+
+                while (choice2 > 2 || choice2 < 0){
+                    System.out.println("Escolha invalida. Tente novamente.");
+                    System.out.println("1 = Criar um pedido.\n2 = Consultar um pedido ");
+                    choice2 = scanner.nextInt();
+                }
+
                 if (choice2 == 1) {
                     Pedido pedido = new Pedido();
                     ItemPedidoUseCase it = new ItemPedidoUseCase();
-                    iniciarPedido(pedido);
+                    List<ItemPedido> list = new ArrayList<>();
+                    iniciarPedido(pedido, list);
                     System.out.println("Deseja comecar a inserir produtos no seu pedido? (y/n)");
                     char cont = scanner.next().charAt(0);
                     while (cont != 'y' && cont != 'n') {
-                        System.out.println("Escolha invalida seu safado. Tente novamente");
+                        System.out.println("Escolha invalida. Tente novamente");
                         cont = scanner.next().charAt(0);
                     }
                     while (cont != 'n') {
-                        criarItemPedido(pedido.getIdpedido());
+                        criarItemPedido(pedido.getIdpedido(), list);
                         System.out.println("\nValor atual do seu pedido:" + it.totalValor(pedido) + "\n");
+                        pd.mostrarCarrinho(pedido);
                         System.out.println("Deseja continuar a inserir produtos no seu pedido? (y/n)");
                         cont = scanner.next().charAt(0);
-                        if (cont == 'n') {
-                            System.exit(0);
-                        }
                     }
+                    System.out.println("Pedido finalizado!");
 
                 } else if (choice2 == 2) {
                     consultarPedido();
@@ -67,7 +84,7 @@ public class ComandosUsuario {
             // cliente
             else if (choice == 3) {
                 ClienteUseCase cliente = new ClienteUseCase();
-                System.out.println("Deseja criar, ou consultar um cliente por nome, ou consultar os clientes? (1, 2, 3)");
+                System.out.println("Deseja criar, consultar um cliente por nome, ou consultar todos os clientes? (1, 2, 3)");
                 int escolhaCliente = scanner.nextInt();
                 if (escolhaCliente == 1) {
                     addCliente();
@@ -81,19 +98,31 @@ public class ComandosUsuario {
                     cliente.consultarCliente();
                 }
             }
-            else if (choice > 3 || choice < 1) {
-                System.out.println("Escolha nao disponivel.");
-                System.exit(0);
-            }
 
             System.out.println("Deseja continuar? (y/n)");
             char continuar = scanner.next().charAt(0);
+            while (continuar != 'n' && continuar != 'y') {
+                System.out.println("Escolha invalida tente novamente (y/n).");
+                continuar = scanner.next().charAt(0);
+            }
             if (continuar == 'n') {
                 choice = 0;
-            } else {
+            }
+            else if (continuar == 'y'){
                 System.out.println("Qual tabela deseja manipular?");
                 System.out.println("1 = Produto\n2 = Pedido\n3 = Cliente\n0 = Finalizar programa.");
                 choice = scanner.nextInt();
+            }
+            if (choice == 321) {
+                ClienteUseCase c = new ClienteUseCase();
+                System.out.println("Tem certeza que quer formatar o banco de dados? (y/n)");
+                char escolha = scanner.next().charAt(0);
+                if (escolha == 'y') {
+                    c.formatarBanco();
+                }
+                else {
+                    System.exit(0);
+                }
             }
         }
 
@@ -144,7 +173,7 @@ public class ComandosUsuario {
     // ItemPedido e Pedido metodos:
 
 
-    public void iniciarPedido(Pedido ped) {
+    public void iniciarPedido(Pedido ped, List<ItemPedido> ip) {
         PedidoUseCase pd = new PedidoUseCase();
         ClienteUseCase cliente = new ClienteUseCase();
         System.out.println("Insira o nome do cliente. (Caso nao tenha o nome de um cliente, abra o programa novamente e crie um.)");
@@ -152,22 +181,23 @@ public class ComandosUsuario {
         String nome = scanner.nextLine();
         ped.setIdcliente(cliente.consultarIDclientePorNome(nome));
         pd.criarPedidoSemTotal(ped);
+        ped.setItensPedido(ip);
     }
 
 
-    public void criarItemPedido(int idpedido) {
+    public void criarItemPedido(int idpedido, List<ItemPedido> ip) {
         ItemPedidoUseCase it = new ItemPedidoUseCase();
         ProdutoUseCase pr = new ProdutoUseCase();
         System.out.println("Tabela de Produtos disponiveis:");
         pr.consultarProdutos();
         scanner.nextLine();
-        System.out.println("Agora insira o nome do produto ao seu pedido.");
-        String nome = scanner.nextLine();
-        int i = pr.consultarIDItemPorNome(nome);
+        System.out.println("Agora insira o ID do produto ao seu pedido.");
+        int ID = scanner.nextInt();
+        int i = pr.consultarIDItem(ID);
         while (i == 0) {
             System.out.println("Insira o produto novamente.");
-            nome = scanner.nextLine();
-            i = pr.consultarIDItemPorNome(nome);
+            ID = scanner.nextInt();
+            i = pr.consultarIDItem(ID);
         }
         System.out.println("Quantos deste produto deseja comprar?");
         int qt = scanner.nextInt();
@@ -177,6 +207,7 @@ public class ComandosUsuario {
         }
 
         ItemPedido itpedido = ItemPedido.builder().idpedido(idpedido).quantidade(qt).idproduto(i).build();
+        ip.add(itpedido);
         if (it.criarItemPedido(itpedido, idpedido)) {
             System.out.println("Item adicionado ao pedido com sucesso.");
         } else {
@@ -189,7 +220,17 @@ public class ComandosUsuario {
         System.out.println("Insira o nome do cliente que fez o pedido.");
         scanner.nextLine();
         String nome = scanner.nextLine();
-        pd.consultarPedido(nome);
+        if (pd.consultarPedido(nome) == null) {
+            System.out.println("Nenhum pedido associado ao cliente '" + nome + "' foi encontrado.");
+        }
+        else {
+            System.out.println("Caso queira ver quais produtos foram comprados em cada pedido. Insira o ID do pedido. (0 para cancelar.)");
+            int idpedido = scanner.nextInt();
+            pd.printarLista(idpedido);
+        }
+
+
     }
+
 
 }

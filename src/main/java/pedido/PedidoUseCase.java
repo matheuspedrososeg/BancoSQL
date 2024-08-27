@@ -1,11 +1,13 @@
 package pedido;
 
 import infra.IniciarConexao;
+import itemPedido.ItemPedido;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class PedidoUseCase {
     Connection connection = IniciarConexao.startConnection();
@@ -26,13 +28,15 @@ public class PedidoUseCase {
         }
     }
 
-    public void consultarPedido(String nome) {
+    public String consultarPedido(String nome) {
         String query = "select c.nome, p.idpedido, p.total from pedido p left outer join cliente c on p.idcliente = c.idcliente where c.nome like '" + nome +"%';";
-        Pedido pedido = new Pedido();
         Statement stm;
         try {
             stm = connection.createStatement();
             ResultSet rs = stm.executeQuery(query);
+            if (!rs.next()) {
+                return null;
+            }
             while (rs.next()) {
                 System.out.println("Nome cliente: " +
                         rs.getString("nome") +
@@ -44,6 +48,35 @@ public class PedidoUseCase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return "1";
     }
-
+    public void mostrarCarrinho(Pedido pedido) {
+        for (int i = 0; i < pedido.getItensPedido().size(); i++) {
+            String query = "select p.nome as nome from produto where p.idproduto = " + pedido.getItensPedido().get(i).getIdproduto() + ";";
+            Statement stm;
+            try {
+                stm = connection.createStatement();
+                ResultSet rs = stm.executeQuery(query);
+                while (rs.next()) {
+                    System.out.println("Produto: " + rs.getString("nome") + " Quantidade: " + pedido.getItensPedido().get(i).getQuantidade());
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public void printarLista(int idpedido) {
+        String query = "select p.nome as produto, ip.quantidade from item_pedido ip " +
+                "left outer join produto p on ip.idproduto = p.idproduto where idpedido = " + idpedido + ";";
+        Statement stm;
+        try {
+            stm = connection.createStatement();
+             ResultSet rs = stm.executeQuery(query);
+             while (rs.next()) {
+                 System.out.println("Produto: " + rs.getString("produto") + " Quantidade: " + rs.getInt("quantidade"));
+             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

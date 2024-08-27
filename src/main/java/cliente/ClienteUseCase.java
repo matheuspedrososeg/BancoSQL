@@ -84,5 +84,23 @@ public class ClienteUseCase {
         }
         return 0;
     }
+    public boolean formatarBanco() {
+        String query = "delete from item_pedido;\n" +
+                "delete from pedido;\n" +
+                "delete from produto;\n" +
+                "delete from cliente;\n" +
+                "alter sequence item_pedido_iditempedido_seq restart with 1;\n" +
+                "alter sequence pedido_idpedido_seq restart with 1;\n" +
+                "alter sequence produto_idproduto_seq restart with 1;\n" +
+                "alter sequence cliente_idcliente_seq restart with 1;";
+        Statement stm;
+        try {
+            stm = connection.createStatement();
+            stm.executeUpdate(query);
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

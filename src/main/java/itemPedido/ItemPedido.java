@@ -18,4 +18,9 @@ public class ItemPedido {
     protected int idpedido;
     protected int quantidade;
     protected int idproduto;
+
+    @Override
+    public String toString() {
+        return "Produto: " + idproduto + " Quantidade: " + quantidade;
+    }
 }

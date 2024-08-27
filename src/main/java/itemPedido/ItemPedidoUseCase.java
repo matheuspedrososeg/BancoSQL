@@ -41,7 +41,7 @@ public class ItemPedidoUseCase {
                 total = total + (qt * valor);
             }
             pedido.setTotal(total);
-            String totalSet = "update pedido set total = "+ pedido.getTotal() +" where idpedido = " + pedido.getIdpedido() + ";";
+            String totalSet = "update pedido set total = " + pedido.getTotal() +" where idpedido = " + pedido.getIdpedido() + ";";
             stm.executeUpdate(totalSet);
             return total;
         } catch (SQLException e) {
