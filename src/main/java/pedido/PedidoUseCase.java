@@ -1,19 +1,17 @@
 package pedido;
 
 import infra.IniciarConexao;
-import itemPedido.ItemPedido;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 public class PedidoUseCase {
     Connection connection = IniciarConexao.startConnection();
     public boolean criarPedidoSemTotal(Pedido pedido) {
         String query = "insert into pedido(idcliente) values (" +
-                pedido.getIdcliente() + ")";
+                pedido.getCliente().getIdCliente() + ")";
         String Id = "select max(idpedido) from pedido;";
         Statement stm;
         try {

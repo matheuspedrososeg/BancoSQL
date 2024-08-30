@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import pedido.Pedido;
 import produto.Produto;
 
-import java.util.List;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

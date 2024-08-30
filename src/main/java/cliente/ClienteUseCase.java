@@ -66,23 +66,26 @@ public class ClienteUseCase {
         }
     }
 
-    public int consultarIDclientePorNome(String nome) {
+    public Cliente consultarIDclientePorNome(String nome) {
+        Cliente cliente = new Cliente();
         String query = "select c.idcliente from cliente c where c.nome like '" + nome + "%';";
         Statement stm;
         try {
             stm = connection.createStatement();
             ResultSet rs = stm.executeQuery(query);
             if (rs.next()) {
-                return rs.getInt("idcliente");
+                 int i = rs.getInt("idcliente");
+                 cliente.setIdCliente(i);
+                 return cliente;
             }
             else {
-                System.out.println("Cliente nao encontrado.");
+                System.out.println("Cliente não encontrado.");
                 System.exit(0);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return 0;
+        return null;
     }
     public boolean formatarBanco() {
         String query = "delete from item_pedido;\n" +

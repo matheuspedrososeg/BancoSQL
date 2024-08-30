@@ -9,7 +9,6 @@ import pedido.PedidoUseCase;
 import produto.Produto;
 import produto.ProdutoUseCase;
 
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -179,7 +178,7 @@ public class ComandosUsuario {
         System.out.println("Insira o nome do cliente. (Caso nao tenha o nome de um cliente, abra o programa novamente e crie um.)");
         scanner.nextLine();
         String nome = scanner.nextLine();
-        ped.setIdcliente(cliente.consultarIDclientePorNome(nome));
+        ped.setCliente(cliente.consultarIDclientePorNome(nome));
         pd.criarPedidoSemTotal(ped);
         ped.setItensPedido(ip);
     }
@@ -188,6 +187,8 @@ public class ComandosUsuario {
     public void criarItemPedido(int idpedido, List<ItemPedido> ip) {
         ItemPedidoUseCase it = new ItemPedidoUseCase();
         ProdutoUseCase pr = new ProdutoUseCase();
+        PedidoUseCase pu = new PedidoUseCase();
+
         System.out.println("Tabela de Produtos disponiveis:");
         pr.consultarProdutos();
         scanner.nextLine();
@@ -205,6 +206,7 @@ public class ComandosUsuario {
             System.out.println("Quantidade invalida. Tente novamente.");
             qt = scanner.nextInt();
         }
+
 
         ItemPedido itpedido = ItemPedido.builder().idpedido(idpedido).quantidade(qt).idproduto(i).build();
         ip.add(itpedido);
