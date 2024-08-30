@@ -37,6 +37,12 @@ public class PedidoUseCase {
             if (!rs.next()) {
                 return null;
             }
+            System.out.println("Nome cliente: " +
+                    rs.getString("nome") +
+                    " ID do pedido: " +
+                    rs.getInt("idpedido") +
+                    " Total: " +
+                    rs.getFloat("total"));
             while (rs.next()) {
                 System.out.println("Nome cliente: " +
                         rs.getString("nome") +

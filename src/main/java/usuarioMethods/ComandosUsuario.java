@@ -224,11 +224,10 @@ public class ComandosUsuario {
             System.out.println("Nenhum pedido associado ao cliente '" + nome + "' foi encontrado.");
         }
         else {
-            System.out.println("Caso queira ver quais produtos foram comprados em cada pedido. Insira o ID do pedido. (0 para cancelar.)");
+            System.out.println("Caso queira ver quais produtos foram comprados em cada pedido. Insira o ID do pedido. (Digite 0 caso não queira.)");
             int idpedido = scanner.nextInt();
             pd.printarLista(idpedido);
         }
-
 
     }
 
